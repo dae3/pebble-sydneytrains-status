@@ -1,0 +1,22 @@
+{
+  "uuid": "840a16de-b57e-4e54-b002-18df840fee6f",
+  "shortName": "CityRail",
+  "longName": "CityRail train status",
+  "companyName": "deverett@gmail.com",
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt", "chalk"],
+  "enableMultiJS": true,
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+      "dummy": 0,
+      "APPMSG_REFRESH" : 1,
+      "APPMSG_LINESTATUS" : 2,
+      "APPMSG_STATUS" : 3
+  },
+  "resources": {
+    "media": []
+  }
+}

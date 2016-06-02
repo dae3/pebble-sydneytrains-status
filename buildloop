@@ -1,0 +1,1 @@
+find . -name *.[ch] -or -name *.js | entr ./build-and-eminstall
