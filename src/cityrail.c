@@ -20,6 +20,13 @@ static void window_unload(Window *window) {
 }
 
 static void init(void) {
+  line_status = initLineStatus(4);
+  addLineStatus("line1", "Delays");
+  addLineStatus("line2", "Good service");
+  addLineStatus("line3", "Trackwork");
+  addLineStatus("line4", "Unknown");
+
+
   window = window_create();
   window_set_window_handlers(window, (WindowHandlers) {
       .load = window_load,
@@ -29,10 +36,6 @@ static void init(void) {
 
   appmsg_init();
 
-  line_status = addLineStatus("line1", LINESTATUS_DELAYS);
-  addLineStatus("line2", LINESTATUS_GOODSERVICE);
-  addLineStatus("line3", LINESTATUS_TRACKWORK);
-  addLineStatus("line4", LINESTATUS_UNKNOWN);
 
 }
 

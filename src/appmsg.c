@@ -1,5 +1,49 @@
 #include <pebble.h>
 #include "appmsg.h"
+#include "linestatus.h"
+
+void appmsg_inbox_received(DictionaryIterator *iter, void *context) {
+  Tuple *msgtype, *line_name, *line_status, *status;
+
+  msgtype = dict_find(iter, APPMSGKEY_MSGTYPE);
+  if (msgtype == NULL) {
+    APP_LOG(APP_LOG_LEVEL_ERROR, "appmsg with no message type");
+  } else {
+    switch(msgtype->value->int8) {
+    case APPMSGTYPE_REFRESH:
+
+      break;
+    case APPMSGTYPE_STATUS:
+
+      break;
+    case APPMSGTYPE_LINESTATUS:
+      line_name = dict_find(iter, APPMSGKEY_LINENAME);
+      line_status = dict_find(iter, APPMSGKEY_LINESTATUS);
+      if (line_name == NULL || line_status == NULL) {
+	APP_LOG(APP_LOG_LEVEL_ERROR, "got linestatus message without line name or line status");
+      } else {
+	a
+      }
+      break;
+    default:
+      APP_LOG(APP_LOG_LEVEL_ERROR, "appmsg with unknown message type %d", msgtype->value->int8);
+      break;
+    }
+  }
+}
+
+void appmsg_inbox_dropped(AppMessageResult reason, void *context) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "appmsg inbox dropped: %d", reason);
+}
+
+void appmsg_outbox_sent(DictionaryIterator *iter, void *context) {
+  
+}
+
+void appmsg_outbox_failed(DictionaryIterator *iter, AppMessageResult reason, void *context) {
+  APP_LOG(APP_LOG_LEVEL_ERROR, "appmsg outbox failed: %d", reason);
+}
+
 
 void appmsg_init(void) {
   uint32_t dict_size_in, dict_size_out;
@@ -17,6 +61,11 @@ void appmsg_init(void) {
 
   dict_size_in = dict_calc_buffer_size_from_tuplets(dummy_tuplets_in, 3);
   dict_size_out = dict_calc_buffer_size_from_tuplets(dummy_tuplets_out, 2);
+
+  app_message_register_inbox_received(appmsg_inbox_received);
+  app_message_register_inbox_dropped(appmsg_inbox_dropped);
+  app_message_register_outbox_sent(appmsg_outbox_sent);
+  app_message_register_outbox_failed(appmsg_outbox_failed);
 
   if (app_message_open(dict_size_in, dict_size_out) == APP_MSG_OK) {
 

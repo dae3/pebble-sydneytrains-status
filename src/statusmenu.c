@@ -8,9 +8,11 @@ uint16_t mcb_get_rows_in_section(MenuLayer *menu, uint16_t section, void *contex
 }
 
 void mcb_draw_row(GContext *gcontext, const Layer *cell_layer, MenuIndex *cell_index, void *context) {
-  char t[] = "xx";
-  snprintf(t, strlen(t), "%d",cell_index->row);
-  menu_cell_basic_draw(gcontext, cell_layer, t, "subtitle", NULL);
+  LineStatus *ls = (LineStatus*)context;
+  menu_cell_basic_draw(gcontext, cell_layer,
+		       ls[cell_index->row].line_name,
+		       ls[cell_index->row].status,
+		       NULL);
 }
 
 void mcb_select_row(MenuLayer *menu, MenuIndex *cell_index, void *context) {
