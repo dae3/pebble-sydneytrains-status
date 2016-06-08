@@ -3,7 +3,7 @@
 #include "linestatus.h"
 
 void appmsg_inbox_received(DictionaryIterator *iter, void *context) {
-  Tuple *msgtype, *line_name, *line_status, *status;
+  Tuple *msgtype, *line_name, *line_status, *num_lines;
 
   msgtype = dict_find(iter, APPMSGKEY_MSGTYPE);
   if (msgtype == NULL) {
@@ -11,7 +11,14 @@ void appmsg_inbox_received(DictionaryIterator *iter, void *context) {
   } else {
     switch(msgtype->value->int8) {
     case APPMSGTYPE_REFRESH:
-
+      num_lines = dict_find(iter, APPMSGKEY_NUMLINES);
+      if (num_lines == NULL) {
+	APP_LOG(APP_LOG_LEVEL_ERROR, "got refresh appmsg without number of lines");
+      } else {
+	deleteLineStatus();
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "initLineStatus %d", num_lines->value->int8);
+	initLineStatus(num_lines->value->int8);
+      }
       break;
     case APPMSGTYPE_STATUS:
 
@@ -22,7 +29,8 @@ void appmsg_inbox_received(DictionaryIterator *iter, void *context) {
       if (line_name == NULL || line_status == NULL) {
 	APP_LOG(APP_LOG_LEVEL_ERROR, "got linestatus message without line name or line status");
       } else {
-	a
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "linestatus appmsg received %s %s",line_name->value->cstring, line_status->value->cstring);
+	addLineStatus(line_name->value->cstring, line_status->value->cstring);
       }
       break;
     default:
@@ -51,7 +59,7 @@ void appmsg_init(void) {
   Tuplet dummy_tuplets_out[] = {
     TupletInteger(APPMSGKEY_MSGTYPE, APPMSGTYPE_LINESTATUS),
     TupletCString(APPMSGKEY_LINENAME, "dummy line"),
-    TupletInteger(APPMSGTYPE_LINESTATUS, LINESTATUS_UNKNOWN)
+    TupletCString(APPMSGTYPE_LINESTATUS, "dummy line status")
   };
 
   Tuplet dummy_tuplets_in[] = {

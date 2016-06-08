@@ -20,12 +20,6 @@ static void window_unload(Window *window) {
 }
 
 static void init(void) {
-  line_status = initLineStatus(4);
-  addLineStatus("line1", "Delays");
-  addLineStatus("line2", "Good service");
-  addLineStatus("line3", "Trackwork");
-  addLineStatus("line4", "Unknown");
-
 
   window = window_create();
   window_set_window_handlers(window, (WindowHandlers) {

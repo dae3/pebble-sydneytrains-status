@@ -4,7 +4,7 @@
 static MenuLayer *menu;
 
 uint16_t mcb_get_rows_in_section(MenuLayer *menu, uint16_t section, void *context) {
-  return 5;
+  return getNumLines();
 }
 
 void mcb_draw_row(GContext *gcontext, const Layer *cell_layer, MenuIndex *cell_index, void *context) {

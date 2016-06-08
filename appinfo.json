@@ -11,10 +11,11 @@
     "watchface": false
   },
   "appKeys": {
-      "dummy": 0,
-      "APPMSG_REFRESH" : 1,
-      "APPMSG_LINESTATUS" : 2,
-      "APPMSG_STATUS" : 3
+      "APPMSGKEY_MSGTYPE" : 0,
+      "APPMSGKEY_LINENAME" : 1,
+      "APPMSGKEY_LINESTATUS" : 2,
+      "APPMSGKEY_STATUS" : 3,
+      "APPMSGKEY_NUMLINES" : 4
   },
   "resources": {
     "media": []

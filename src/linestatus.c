@@ -35,3 +35,8 @@ void deleteLineStatus(void) {
 
   free(status);
 }
+
+int getNumLines(void) {
+  // last_index is incremented post add
+  return last_index;
+}
