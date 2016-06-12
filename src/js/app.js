@@ -12,30 +12,27 @@ Pebble.addEventListener('appmessage', function(eventType, payload) {
 
 });
 
-
-
-
 function sendLineStatusToWatch() {
     status = dummyLineStatusProvider();
+    line_names = Object.keys(status);
+
     Pebble.sendAppMessage(
-	{ "APPMSGKEY_MSGTYPE" : APPMSGTYPE_REFRESH, "APPMSGKEY_NUMLINES" : Object.keys(status).length },
+	{ "APPMSGKEY_MSGTYPE" : APPMSGTYPE_REFRESH, "APPMSGKEY_NUMLINES" : line_names.length },
 	function(d) { console.log('linenum appmsg sent'); },
 	function(d, e) { console.log('linenum appmsg not sent: ' + e); }
     );
 
-    Object.keys(status).forEach(
-	function(k, i) {
+    for (i = 0; i < line_names.length; ) {
     	    Pebble.sendAppMessage(
     	    	{
     	    	    "APPMSGKEY_MSGTYPE" : APPMSGTYPE_LINESTATUS,
-    	    	    "APPMSGKEY_LINENAME" : k,
-    	    	    "APPMSGKEY_LINESTATUS" : status[k]
+    	    	    "APPMSGKEY_LINENAME" : line_names[i],
+    	    	    "APPMSGKEY_LINESTATUS" : status[line_names[i]]
     	    	},
-    	    	function(d) { console.log('linestatus appmsg sent: ' + k); },
-    	    	function(d, e) { console.log('linestatus appmsg not sent'); }
-	    )
-	}
-    );
+    	    	function(d) { i++; console.log('linestatus appmsg sent: ' + line_names[i]);  },
+    	    	function(d, e) { console.log('linestatus appmsg not sent'); sleep(2000); }
+    	    );
+    }
 }
 
 function dummyLineStatusProvider() {
