@@ -12,27 +12,29 @@ Pebble.addEventListener('appmessage', function(eventType, payload) {
 
 });
 
+function sendOneLineToWatch(status, index) {
+    line_names = Object.keys(status);
+    
+    Pebble.sendAppMessage(
+    	{
+    	    "APPMSGKEY_MSGTYPE" : APPMSGTYPE_LINESTATUS,
+    	    "APPMSGKEY_LINENAME" : line_names[index],
+    	    "APPMSGKEY_LINESTATUS" : status[line_names[index]]
+    	},
+    	function(d) {
+	    console.log('linestatus appmsg sent: ' + line_names[index]);
+	    if (++index < line_names.length) { sendOneLineToWatch(status, index); }
+	},
+    	function(d, e) {
+	    console.log('linestatus appmsg not sent');
+	    setTimeout(sendOneLineToWatch(status, index), 1000);
+	}
+    );
+}
+
 function sendLineStatusToWatch() {
     status = dummyLineStatusProvider();
-    line_names = Object.keys(status);
-
-    Pebble.sendAppMessage(
-	{ "APPMSGKEY_MSGTYPE" : APPMSGTYPE_REFRESH, "APPMSGKEY_NUMLINES" : line_names.length },
-	function(d) { console.log('linenum appmsg sent'); },
-	function(d, e) { console.log('linenum appmsg not sent: ' + e); }
-    );
-
-    for (i = 0; i < line_names.length; ) {
-    	    Pebble.sendAppMessage(
-    	    	{
-    	    	    "APPMSGKEY_MSGTYPE" : APPMSGTYPE_LINESTATUS,
-    	    	    "APPMSGKEY_LINENAME" : line_names[i],
-    	    	    "APPMSGKEY_LINESTATUS" : status[line_names[i]]
-    	    	},
-    	    	function(d) { i++; console.log('linestatus appmsg sent: ' + line_names[i]);  },
-    	    	function(d, e) { console.log('linestatus appmsg not sent'); sleep(2000); }
-    	    );
-    }
+    sendOneLineToWatch(status, 0);
 }
 
 function dummyLineStatusProvider() {

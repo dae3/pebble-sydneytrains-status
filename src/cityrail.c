@@ -11,15 +11,15 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
   
-  statusmenu = status_menu_create(bounds, window, line_status);
+  statusmenu = status_menu_create(bounds, window);
 }
-
 
 static void window_unload(Window *window) {
   status_menu_destroy();
 }
 
 static void init(void) {
+  appmsg_init();
 
   window = window_create();
   window_set_window_handlers(window, (WindowHandlers) {
@@ -27,10 +27,6 @@ static void init(void) {
 	.unload = window_unload,
 	});
   window_stack_push(window, true);
-
-  appmsg_init();
-
-
 }
 
 static void deinit(void) {

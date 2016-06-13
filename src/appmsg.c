@@ -29,7 +29,7 @@ void appmsg_inbox_received(DictionaryIterator *iter, void *context) {
       if (line_name == NULL || line_status == NULL) {
 	APP_LOG(APP_LOG_LEVEL_ERROR, "got linestatus message without line name or line status");
       } else {
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "linestatus appmsg received %s %s",line_name->value->cstring, line_status->value->cstring);
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "linestatus appmsg received %s %s", line_name->value->cstring, line_status->value->cstring);
 	addLineStatus(line_name->value->cstring, line_status->value->cstring);
       }
       break;

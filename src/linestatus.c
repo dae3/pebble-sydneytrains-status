@@ -38,5 +38,10 @@ void deleteLineStatus(void) {
 
 int getNumLines(void) {
   // last_index is incremented post add
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "getNumLines %d", last_index);
   return last_index;
+}
+
+LineStatus *getLineStatus(void) {
+  return status;
 }

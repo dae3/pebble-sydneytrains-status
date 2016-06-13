@@ -4,11 +4,14 @@
 static MenuLayer *menu;
 
 uint16_t mcb_get_rows_in_section(MenuLayer *menu, uint16_t section, void *context) {
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "mcb_get_rows_in_section");
   return getNumLines();
 }
 
 void mcb_draw_row(GContext *gcontext, const Layer *cell_layer, MenuIndex *cell_index, void *context) {
-  LineStatus *ls = (LineStatus*)context;
+  LineStatus *ls = getLineStatus();
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "mcb_draw_row");
+  //APP_LOG(APP_LOG_LEVEL_DEBUG, "mcb_draw_row %s %s", ls[cell_index->row].line_name, ls[cell_index->row].status);
   menu_cell_basic_draw(gcontext, cell_layer,
 		       ls[cell_index->row].line_name,
 		       ls[cell_index->row].status,
@@ -27,7 +30,6 @@ void mcb_draw_background(GContext *gcontext, const Layer *background_layer, bool
 
 }
 
-
 static MenuLayerCallbacks callbacks = {
   .get_num_rows = mcb_get_rows_in_section,
   .draw_row = mcb_draw_row,
@@ -37,10 +39,12 @@ static MenuLayerCallbacks callbacks = {
 };
 
 
-MenuLayer *status_menu_create(GRect bounds, Window *window, LineStatus *line_status) {
+MenuLayer *status_menu_create(GRect bounds, Window *window) {
+
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "status_menu_create");
 
   menu = menu_layer_create(bounds);
-  menu_layer_set_callbacks(menu, (void*)line_status, callbacks);
+  menu_layer_set_callbacks(menu, NULL, callbacks);
   layer_add_child(window_get_root_layer(window), menu_layer_get_layer(menu));
   menu_layer_set_click_config_onto_window(menu, window);
  
