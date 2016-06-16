@@ -5,6 +5,7 @@ static LineStatus *status;
 static int last_index = 0;
 
 LineStatus *initLineStatus(int numlines) {
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "initLineStatus %d", numlines);
   status = (LineStatus*)calloc(numlines, sizeof(LineStatus));
   if (status == NULL)
     APP_LOG(APP_LOG_LEVEL_ERROR, "calloc of LineStatus array failed");
@@ -21,6 +22,7 @@ void addLineStatus(const char *line_name, const char *line_status) {
     strncpy(status[last_index].line_name, line_name, strlen(line_name));
     strncpy(status[last_index].status, line_status, strlen(line_status));
     last_index++;
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "addLineStatus %s %s", line_name, line_status);
   }
 }
 
@@ -38,7 +40,7 @@ void deleteLineStatus(void) {
 
 int getNumLines(void) {
   // last_index is incremented post add
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "getNumLines %d", last_index);
+  //APP_LOG(APP_LOG_LEVEL_DEBUG, "getNumLines %d", last_index);
   return last_index;
 }
 

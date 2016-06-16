@@ -2,6 +2,9 @@
 #include "appmsg.h"
 #include "linestatus.h"
 
+static bool pkjs_ready = false;
+extern void debug_dump_dict(DictionaryIterator *iter);
+
 void appmsg_inbox_received(DictionaryIterator *iter, void *context) {
   Tuple *msgtype, *line_name, *line_status, *num_lines;
 
@@ -33,6 +36,11 @@ void appmsg_inbox_received(DictionaryIterator *iter, void *context) {
 	addLineStatus(line_name->value->cstring, line_status->value->cstring);
       }
       break;
+    case APPMSGTYPE_PKJSREADY:
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "ready appmsg received");
+      pkjs_ready = true;
+      break;
+      
     default:
       APP_LOG(APP_LOG_LEVEL_ERROR, "appmsg with unknown message type %d", msgtype->value->int8);
       break;
@@ -45,13 +53,38 @@ void appmsg_inbox_dropped(AppMessageResult reason, void *context) {
 }
 
 void appmsg_outbox_sent(DictionaryIterator *iter, void *context) {
-  
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "appmsg outbox sent");
+  debug_dump_dict(iter);
 }
 
 void appmsg_outbox_failed(DictionaryIterator *iter, AppMessageResult reason, void *context) {
   APP_LOG(APP_LOG_LEVEL_ERROR, "appmsg outbox failed: %d", reason);
 }
 
+void retrytimer(void *data) {
+  appmsg_refreshstatus();
+}
+
+void appmsg_refreshstatus(void) {
+  DictionaryIterator *dict;
+
+  if (pkjs_ready) { 
+    if (app_message_outbox_begin(&dict) == APP_MSG_OK) {
+      dict_write_int8(dict, APPMSGKEY_MSGTYPE, APPMSGTYPE_REFRESH);
+      //dict_write_end(dict);
+      if (app_message_outbox_send() != APP_MSG_OK) {
+	APP_LOG(APP_LOG_LEVEL_ERROR, "Error sending appmsg");
+      } else {
+	APP_LOG(APP_LOG_LEVEL_DEBUG, "refresh appmsg sent");
+      }
+    } else {
+      APP_LOG(APP_LOG_LEVEL_ERROR, "Couldn't open appmsg outbox.");
+    }
+  } else {
+    // not ready, wait and retry
+    app_timer_register(500, retrytimer, NULL);
+  }
+}
 
 void appmsg_init(void) {
   uint32_t dict_size_in, dict_size_out;

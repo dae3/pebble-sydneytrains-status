@@ -1,10 +1,10 @@
 #include <pebble.h>
 #include "linestatus.h"
+#include "appmsg.h"
 
 static MenuLayer *menu;
 
 uint16_t mcb_get_rows_in_section(MenuLayer *menu, uint16_t section, void *context) {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "mcb_get_rows_in_section");
   return getNumLines();
 }
 
@@ -48,6 +48,8 @@ MenuLayer *status_menu_create(GRect bounds, Window *window) {
   layer_add_child(window_get_root_layer(window), menu_layer_get_layer(menu));
   menu_layer_set_click_config_onto_window(menu, window);
  
+  appmsg_refreshstatus();
+
   return menu;
 }
 

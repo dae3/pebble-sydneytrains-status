@@ -1,15 +1,34 @@
 const APPMSGTYPE_REFRESH = 0;
 const APPMSGTYPE_STATUS = 1;
 const APPMSGTYPE_LINESTATUS = 2;
+const APPMSGTYPE_PKJSREADY = 3;
+
+var pkjs_ready = false;
 
 Pebble.addEventListener('ready', function(eventType, payload) {
     console.log('ready event');
-    sendLineStatusToWatch();
+    pkjs_ready = true;
+    Pebble.sendAppMessage({"APPMSGKEY_MSGTYPE" : APPMSGTYPE_PKJSREADY},null, null);
 });
 
-Pebble.addEventListener('appmessage', function(eventType, payload) {
+Pebble.addEventListener('appmessage', function(e) {
     console.log('appmessage event');
+    var dict = e.payload;
+    //var dict = payload;
+    if (!('APPMSGKEY_MSGTYPE' in dict)) {
+	console.log('appmsg with no MSGTYPE');
+    } else {
+	switch (dict['APPMSGKEY_MSGTYPE']) {
+	case APPMSGTYPE_REFRESH:
+	    console.log('appmsg refresh');
+	    sendLineStatusToWatch();
+	    break;
 
+	default:
+	    console.log('appmsg not refresh');
+	    break;
+	}
+    }
 });
 
 function sendOneLineToWatch(status, index) {
@@ -27,14 +46,25 @@ function sendOneLineToWatch(status, index) {
 	},
     	function(d, e) {
 	    console.log('linestatus appmsg not sent');
+	    // TODO: check syntax - this is erroring at runtime
 	    setTimeout(sendOneLineToWatch(status, index), 1000);
 	}
     );
 }
 
 function sendLineStatusToWatch() {
+
     status = dummyLineStatusProvider();
-    sendOneLineToWatch(status, 0);
+    nl = Object.key(status).length;
+    console.log('sendLinestatustowatch ' + nl);
+    Pebble.sendAppMessage(
+	{ "APPMSGKEY_MSGTYPE" : APPMSGTYPE_REFRESH,
+	  "APPMSGKEY_NUMLINES" : nl },
+	sendOneLineToWatch(status, 0),
+	function(d, e) {
+	    // refresh message failed
+	});
+
 }
 
 function dummyLineStatusProvider() {
@@ -49,5 +79,9 @@ function dummyLineStatusProvider() {
 }
 
 function cityrailinfoScreenScraperLineStatusProvider() {
+
+}
+
+function gtfsLineStatusProvider() {
 
 }
