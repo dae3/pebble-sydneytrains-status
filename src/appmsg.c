@@ -1,6 +1,7 @@
 #include <pebble.h>
 #include "appmsg.h"
 #include "linestatus.h"
+#include "statusmenu.h"
 
 static bool pkjs_ready = false;
 extern void debug_dump_dict(DictionaryIterator *iter);
@@ -19,7 +20,6 @@ void appmsg_inbox_received(DictionaryIterator *iter, void *context) {
 	APP_LOG(APP_LOG_LEVEL_ERROR, "got refresh appmsg without number of lines");
       } else {
 	deleteLineStatus();
-	APP_LOG(APP_LOG_LEVEL_DEBUG, "initLineStatus %d", num_lines->value->int8);
 	initLineStatus(num_lines->value->int8);
       }
       break;
@@ -35,6 +35,7 @@ void appmsg_inbox_received(DictionaryIterator *iter, void *context) {
 	APP_LOG(APP_LOG_LEVEL_DEBUG, "linestatus appmsg received %s %s", line_name->value->cstring, line_status->value->cstring);
 	addLineStatus(line_name->value->cstring, line_status->value->cstring);
       }
+      status_menu_refresh();
       break;
     case APPMSGTYPE_PKJSREADY:
       APP_LOG(APP_LOG_LEVEL_DEBUG, "ready appmsg received");

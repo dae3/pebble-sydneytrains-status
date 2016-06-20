@@ -10,7 +10,7 @@ uint16_t mcb_get_rows_in_section(MenuLayer *menu, uint16_t section, void *contex
 
 void mcb_draw_row(GContext *gcontext, const Layer *cell_layer, MenuIndex *cell_index, void *context) {
   LineStatus *ls = getLineStatus();
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "mcb_draw_row");
+  //APP_LOG(APP_LOG_LEVEL_DEBUG, "mcb_draw_row");
   //APP_LOG(APP_LOG_LEVEL_DEBUG, "mcb_draw_row %s %s", ls[cell_index->row].line_name, ls[cell_index->row].status);
   menu_cell_basic_draw(gcontext, cell_layer,
 		       ls[cell_index->row].line_name,
@@ -55,4 +55,8 @@ MenuLayer *status_menu_create(GRect bounds, Window *window) {
 
 void status_menu_destroy(void) {
   menu_layer_destroy(menu);
+}
+
+void status_menu_refresh(void) {
+  menu_layer_reload_data(menu);
 }

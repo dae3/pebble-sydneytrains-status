@@ -55,14 +55,18 @@ function sendOneLineToWatch(status, index) {
 function sendLineStatusToWatch() {
 
     status = dummyLineStatusProvider();
-    nl = Object.key(status).length;
+    nl = Object.keys(status).length;
     console.log('sendLinestatustowatch ' + nl);
     Pebble.sendAppMessage(
 	{ "APPMSGKEY_MSGTYPE" : APPMSGTYPE_REFRESH,
 	  "APPMSGKEY_NUMLINES" : nl },
-	sendOneLineToWatch(status, 0),
+	function(d) {
+	    console.log('sendLinestatustowatch OK');
+	    sendOneLineToWatch(status, 0);
+	},
 	function(d, e) {
 	    // refresh message failed
+	    console.log('sendLinestatustowatch failed ' + e);
 	});
 
 }
@@ -79,7 +83,7 @@ function dummyLineStatusProvider() {
 }
 
 function cityrailinfoScreenScraperLineStatusProvider() {
-
+    
 }
 
 function gtfsLineStatusProvider() {
