@@ -2,6 +2,7 @@
 #include "appmsg.h"
 #include "statusmenu.h"
 #include "linestatus.h"
+#include "statusscreen.h"
 
 static Window *window;
 static MenuLayer *statusmenu;
@@ -21,11 +22,13 @@ static void window_unload(Window *window) {
 static void init(void) {
   appmsg_init();
 
-  window = window_create();
-  window_set_window_handlers(window, (WindowHandlers) {
-      .load = window_load,
-	.unload = window_unload,
-	});
+  /* window = window_create(); */
+  /* window_set_window_handlers(window, (WindowHandlers) { */
+  /*     .load = window_load, */
+  /* 	.unload = window_unload, */
+  /* 	}); */
+
+  window = statusscreen_create();
   window_stack_push(window, true);
 }
 
