@@ -3,12 +3,14 @@ const APPMSGTYPE_STATUS = 1;
 const APPMSGTYPE_LINESTATUS = 2;
 const APPMSGTYPE_PKJSREADY = 3;
 
+var tfnswapi = require('./tfnswapi.js');
 var pkjs_ready = false;
 
 Pebble.addEventListener('ready', function(eventType, payload) {
     console.log('ready event');
     pkjs_ready = true;
     Pebble.sendAppMessage({"APPMSGKEY_MSGTYPE" : APPMSGTYPE_PKJSREADY},null, null);
+    tfnswapi.api();
 });
 
 Pebble.addEventListener('appmessage', function(e) {

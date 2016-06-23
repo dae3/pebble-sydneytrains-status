@@ -4,6 +4,20 @@
 static LineStatus *status;
 static int last_index;
 
+GColor lookup_color_for_status(const char *status) {
+  GColor ret;
+  ret.argb = UNKNOWN_STATUS_COLOR;
+
+  for (int i = 0; i < NUM_COLOR_TABLE_ENTRIES; i++) {
+    if (strcmp(status, color_table[i].status) == 0) {
+      ret.argb = color_table[i].color;
+      break;
+    }
+  }
+
+  return(ret);
+}
+
 LineStatus *initLineStatus(int numlines) {
   APP_LOG(APP_LOG_LEVEL_DEBUG, "initLineStatus %d", numlines);
   status = (LineStatus*)calloc(numlines, sizeof(LineStatus));
@@ -24,6 +38,7 @@ void addLineStatus(const char *line_name, const char *line_status) {
   } else {
     strcpy(status[last_index].line_name, line_name);
     strcpy(status[last_index].status, line_status);
+    status[last_index].status_color = lookup_color_for_status(line_status);
     last_index++;
     APP_LOG(APP_LOG_LEVEL_DEBUG, "addLineStatus %s %s", line_name, line_status);
   }
