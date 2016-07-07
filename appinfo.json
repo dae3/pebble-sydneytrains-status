@@ -18,6 +18,12 @@
       "APPMSGKEY_NUMLINES" : 4
   },
   "resources": {
-    "media": []
+      "media": [
+	  {
+	      "name" : "ROUTES_TXT",
+	      "file" : "tt/routes.txt",
+	      "type" : "raw"
+	  }
+      ]
   }
 }

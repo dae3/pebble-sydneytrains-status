@@ -1,2 +1,3 @@
 pebble clean && pebble wipe
-find . -name *.[ch] -or -name *.js | entr ./build-and-eminstall
+#find . -name appinfo.json -or \*.[ch] -or -name \*.js | entr ./build-and-eminstall
+ls src/*.c src/*.h src/js/*.js appinfo.json | entr ./build-and-eminstall
