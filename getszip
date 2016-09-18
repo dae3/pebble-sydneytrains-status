@@ -1,0 +1,4 @@
+#!/bin/sh
+
+curl -v  -H "Authorization: Bearer 74c1701a-94aa-4c47-a62c-f96c67acee3d" https://api.transport.nsw.gov.au/v1/gtfs/schedule/sydneytrains > s.zip
+
