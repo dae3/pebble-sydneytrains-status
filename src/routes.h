@@ -11,8 +11,23 @@
 #define MAX_ROUTESHORTNAME 3
 #define MAX_COLOUR 6
 
-typedef struct Route {
-  char route_id[MAX_ROUTEID]
-  char route_shortname[MAX_ROUTESHORTNAME]
-  char route_colour[MAX_COLOUR]
-} Route;
+#define CSV_FIELDNUM_ROUTEID 0
+#define CSV_FIELDNUM_AGENCYID 1
+#define CSV_FIELDNUM_ROUTE_SHORT_NAME 2
+#define CSV_FIELDNUM_ROUTE_LONG_NAME 3
+#define CSV_FIELDNUM_ROUTE_DESC 4
+#define CSV_FIELDNUM_ROUTE_TYPE 5
+#define CSV_FIELDNUM_ROUTE_URL 6
+#define CSV_FIELDNUM_ROUTE_COLOUR 7
+#define CSV_FIELDNUM_ROUTE_TEXT_COLOUR 8
+
+struct Route {
+  char route_id[MAX_ROUTEID];
+  char route_shortname[MAX_ROUTESHORTNAME];
+  char route_colour[MAX_COLOUR];
+} ;
+
+int routes_num_routes();
+void routes_load_routes();
+struct Route *routes_get_route_details(char route_id);
+void routes_destroy();

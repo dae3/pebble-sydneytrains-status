@@ -3,6 +3,7 @@
 #include "statusmenu.h"
 #include "linestatus.h"
 #include "statusscreen.h"
+#include "routes.h"
 
 static Window *window;
 static MenuLayer *statusmenu;
@@ -30,12 +31,15 @@ static void init(void) {
 
   window = statusscreen_create();
   window_stack_push(window, true);
+
+  routes_load_routes();
 }
 
 static void deinit(void) {
   appmsg_deinit();
   deleteLineStatus();
   window_destroy(window);
+  routes_destroy();
 }
 
 int main(void) {
