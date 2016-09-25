@@ -13,6 +13,7 @@ void deleteLineStatus(void);
 int getNumLines(void);
 LineStatus *getLineStatus(void);
 
+/* TODO remove typedef and refactor dependencies */
 typedef struct status_color_table {
   const char *status;
   const uint8_t color;

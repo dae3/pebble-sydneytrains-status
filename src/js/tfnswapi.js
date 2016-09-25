@@ -10,7 +10,11 @@ const TFNSW_TIMEOUT = 10000;
 
 var req;
 var tfnswToken;
-var protobuf = require('./protobuf.min.js');
+var Pbf = require('./pbf.js');
+var FeedMessage = require('./gtfs.js').FeedMessage;
+var Entity = require('./gtfs.js').Entity;
+var Alert = require('./gtfs.js').Alert;
+
 
 function tfnswLogin() {
     req = new XMLHttpRequest();
@@ -34,12 +38,13 @@ function tfnswLogin() {
 
 function getTfnswReq(loadProc, errorProc, debug) {
     req = new XMLHttpRequest();
-    req.open('GET', TFNSW_HOST + TFNSW_PATH + '?debug=true');
-    //req.open('GET', TFNSW_HOST + TFNSW_PATH);
+    //req.open('GET', TFNSW_HOST + TFNSW_PATH + '?debug=true');
+    req.open('GET', TFNSW_HOST + TFNSW_PATH);
     req.setRequestHeader('Authorization', 'Bearer ' + tfnswToken);
     req.timeout = TFNSW_TIMEOUT;
     req.addEventListener('load', loadProc);
     req.addEventListener('error', errorProc);
+    req.responseType = 'arraybuffer';
     if (debug) {
  	req.onreadystatechange = function() {
 	    console.log('readystate change to ' + this.readyState);
@@ -54,10 +59,11 @@ function getRealtimeAlerts() {
 	function() {
 	    if (this.readyState == 4 && this.status == 200) {
 		console.log('load OK');
-		//builder = protobuf.loadProtoFile('/home/deverett/cityrail/src/js/gtfs-realtime.proto');
-		//builder = protobuf.loadProtoFile('notreallythere.proto');
-		//FeedMessage = builder.build("FeedMessage");
-		console.log(this.responseText);
+		var pbf = new Pbf(this.response);
+		var fm = FeedMessage.read(pbf);
+		for (i in fm.entity) {
+		    console.log(fm.entity[i].alert.header_text.translation[0].text);
+		}
 	    } else {
 		console.log('load readystate ' + this.readyState + '  status ' + this.status + ' ' + this.statusText);
 		console.log(this.responseText);
@@ -88,6 +94,19 @@ function tfnswapiLineStatusProvider() {
 }
 
 module.exports.login = tfnswLogin;
+
+/* from http://stackoverflow.com/questions/6965107/converting-between-strings-and-arraybuffers */
+
+
+function str2ab(str) {
+  var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+  var bufView = new Uint16Array(buf);
+  for (var i=0, strLen=str.length; i<strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  return buf;
+}
+
 
 /**
 *

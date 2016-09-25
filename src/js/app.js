@@ -1,24 +1,23 @@
-const APPMSGTYPE_REFRESH = 0;
-const APPMSGTYPE_STATUS = 1;
-const APPMSGTYPE_LINESTATUS = 2;
-const APPMSGTYPE_PKJSREADY = 3;
+var APPMSGTYPE_REFRESH = 0;
+var APPMSGTYPE_STATUS = 1;
+var APPMSGTYPE_LINESTATUS = 2;
+var APPMSGTYPE_PKJSREADY = 3;
 
 var tfnswapi = require('./tfnswapi.js');
-// var bytebuffer = require('./bytebuffer.min.js');
 
 var pkjs_ready = false;
 
 Pebble.addEventListener('ready', function(eventType, payload) {
     console.log('ready event');
     pkjs_ready = true;
-    Pebble.sendAppMessage({"APPMSGKEY_MSGTYPE" : APPMSGTYPE_PKJSREADY},null, null);
+    Pebble.sendAppMessage({'APPMSGKEY_MSGTYPE' : APPMSGTYPE_PKJSREADY},null, null);
     tfnswapi.login();
 });
 
 Pebble.addEventListener('appmessage', function(e) {
     console.log('appmessage event');
     var dict = e.payload;
-    //var dict = payload;
+
     if (!('APPMSGKEY_MSGTYPE' in dict)) {
 	console.log('appmsg with no MSGTYPE');
     } else {
@@ -36,13 +35,13 @@ Pebble.addEventListener('appmessage', function(e) {
 });
 
 function sendOneLineToWatch(status, index) {
-    line_names = Object.keys(status);
+    var line_names = Object.keys(status);
     
     Pebble.sendAppMessage(
     	{
-    	    "APPMSGKEY_MSGTYPE" : APPMSGTYPE_LINESTATUS,
-    	    "APPMSGKEY_LINENAME" : line_names[index],
-    	    "APPMSGKEY_LINESTATUS" : status[line_names[index]]
+    	    'APPMSGKEY_MSGTYPE' : APPMSGTYPE_LINESTATUS,
+    	    'APPMSGKEY_LINENAME' : line_names[index],
+    	    'APPMSGKEY_LINESTATUS' : status[line_names[index]]
     	},
     	function(d) {
 	    console.log('linestatus appmsg sent: ' + line_names[index]);
@@ -58,12 +57,12 @@ function sendOneLineToWatch(status, index) {
 
 function sendLineStatusToWatch() {
 
-    status = dummyLineStatusProvider();
-    nl = Object.keys(status).length;
+    var status = dummyLineStatusProvider();
+    var nl = Object.keys(status).length;
     console.log('sendLinestatustowatch ' + nl);
     Pebble.sendAppMessage(
-	{ "APPMSGKEY_MSGTYPE" : APPMSGTYPE_REFRESH,
-	  "APPMSGKEY_NUMLINES" : nl },
+	{ 'APPMSGKEY_MSGTYPE' : APPMSGTYPE_REFRESH,
+	  'APPMSGKEY_NUMLINES' : nl },
 	function(d) {
 	    console.log('sendLinestatustowatch OK');
 	    sendOneLineToWatch(status, 0);

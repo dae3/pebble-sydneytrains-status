@@ -3,4 +3,11 @@ build
 
 # Ignore waf lock file
 .lock-waf*
-*~
+*~$
+gtfs-with-delays-example
+schedule.zip
+s.zip
+libcsv-3.0.3/*
+t[23t].js
+log
+tt/*

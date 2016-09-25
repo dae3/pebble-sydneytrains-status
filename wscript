@@ -28,6 +28,7 @@ def configure(ctx):
 def build(ctx):
     ctx.load('pebble_sdk')
 
+
     build_worker = os.path.exists('worker_src')
     binaries = []
 
