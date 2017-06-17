@@ -1,7 +1,7 @@
 // TFNSW API constants
 // https://opendata.transport.nsw.gov.au
-const TFNSW_APIKEY = 'l7xx61217625406b4aa3ae3c25524f4aa203';
-const TFNSW_APISS = 'db5d6cbd087f4bbaad561abebe5fea21';
+const TFNSW_APIKEY = 'XXX';
+const TFNSW_APISS = 'YYY';
 const TFNSW_HOST = 'https://api.transport.nsw.gov.au';
 const TFNSW_AUTHPATH = '/auth/oauth/v2/token';
 const TFNSW_AUTHPARAMS = 'grant_type=client_credentials&scope=user';
